@@ -120,7 +120,43 @@ export function renderSpendingChart(transactions, settings = {}) {
 
   chart.replaceChildren();
 
-  const days = [];
+ 
+  const weeklyTransactions = transactions.filter(transaction => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const start = new Date(today);
+    start.setDate(start.getDate() - 6);
+
+    const date = new Date(`${transaction.date}T00:00:00`);
+
+    return date >= start && date <= today;
+  });
+
+  const hasWeeklySpending = weeklyTransactions.some(
+    transaction => Number(transaction.amount) > 0
+  );
+
+  if (!hasWeeklySpending) {
+    const emptyState = document.createElement("p");
+    emptyState.className = "chart-empty-state";
+    emptyState.textContent = "No spending recorded this week.";
+    chart.append(emptyState);
+
+    if (summary) {
+      summary.textContent = "Last 7 days: RWF 0";
+    }
+
+    const chartData = document.getElementById("chart-data");
+
+    if (chartData) {
+      chartData.textContent = "";
+    }
+
+    return;
+  }
+ 
+const days = [];
 
   for (let offset = 6; offset >= 0; offset--) {
     const date = new Date();
