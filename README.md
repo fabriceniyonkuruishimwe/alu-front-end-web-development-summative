@@ -114,7 +114,7 @@ The application is intended to be published using GitHub Pages.
 
 After enabling GitHub Pages for the repository, add the published website address here:
 
-[Live application](ADD-YOUR-PUBLISHED-GITHUB-PAGES-URL-HERE)
+[Live application](https://fabriceniyonkuruishimwe.github.io/alu-front-end-web-development-summative/)
 
 ## Author
 

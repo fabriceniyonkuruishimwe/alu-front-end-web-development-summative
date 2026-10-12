@@ -56,22 +56,28 @@ const errorElements = {
 function refreshDashboard() {
   const transactions = getTransactions();
   const query = searchInput?.value || "";
-  const category = categoryFilter?.value || "all";
+  const selectedCategory = categoryFilter?.value || "all";
   const sort = sortSelect?.value || "date-desc";
   const caseSensitive = Boolean(caseSensitiveInput?.checked);
 
   renderDashboard(transactions, settings);
 
-  const visibleTransactions = getVisibleTransactions(
-    transactions,
+  const visibleResult = getVisibleTransactions(transactions, {
     query,
-    category,
-    sort,
+    category: selectedCategory === "all" ? "" : selectedCategory,
+    sortBy: sort,
     caseSensitive
-  );
+  });
+
+  if (visibleResult.error) {
+    showMessage("search-error", visibleResult.error, "error");
+    return;
+  }
+
+  showMessage("search-error", "");
 
   renderTransactions(
-    visibleTransactions,
+    visibleResult.results,
     settings,
     query,
     caseSensitive
