@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pennywise helps students track expenses, manage budgets and understand spending habits.">
+  <title>Pennywise | Student Finance Tracker</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script type="module" src="scripts/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="#dashboard" aria-label="Pennywise home">
+      <span class="brand-icon" aria-hidden="true">P</span>
+      <span>
+        <strong>Pennywise</strong>
+        <small>Student Finance Tracker</small>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#dashboard" aria-current="page">Dashboard</a>
+      <a href="#transactions">Transactions</a>
+      <a href="#about">About</a>
+      <a href="#settings">Settings</a>
+    </nav>
+  </header>
+
+  <main id="main-content" class="page-content">
+    <section id="dashboard" class="welcome-section" aria-labelledby="welcome-title">
+      <div>
+        <p class="eyebrow">YOUR MONEY SPACE</p>
+        <h1 id="welcome-title">Your money, your story.</h1>
+        <p class="section-description">Keep track of your spending and make every little count.</p>
+      </div>
+      <button class="button button-primary" id="add-transaction-button" type="button">
+        <span aria-hidden="true">+</span> Add transaction
+      </button>
+    </section>
+
+    <section class="stats-grid" aria-label="Spending overview">
+      <article class="stat-card">
+        <p class="stat-label">Total spending</p>
+        <p class="stat-value" id="total-spending">RWF 0</p>
+        <p class="stat-note">Across all recorded transactions</p>
+      </article>
+
+      <article class="stat-card">
+        <p class="stat-label">Transactions</p>
+        <p class="stat-value" id="transaction-count">0</p>
+        <p class="stat-note">Recorded expenses</p>
+      </article>
+
+      <article class="stat-card">
+        <p class="stat-label">Budget remaining</p>
+        <p class="stat-value" id="budget-remaining">RWF 120,000</p>
+        <p class="stat-note" id="budget-status">Your monthly spending limit</p>
+        <div class="progress-track" id="budget-progress" role="progressbar" aria-label="Budget used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-fill" id="budget-progress-fill"></div>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <p class="stat-label">Top category</p>
+        <p class="stat-value" id="top-category">None yet</p>
+        <p class="stat-note">Your biggest spending category</p>
+      </article>
+    </section>
+
+    <section class="panel trend-panel" aria-labelledby="trend-title">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">SPENDING PATTERNS</p>
+          <h2 id="trend-title">Last seven days</h2>
+        </div>
+        <p class="muted-text" id="trend-summary">Your daily spending will appear here.</p>
+      </div>
+      <div id="spending-chart" class="chart-container" role="img" aria-label="Spending over the last seven days">
+        <p class="empty-state">Your spending trend will appear once you add transactions.</p>
+      </div>
+      <div id="chart-data" class="chart-data" aria-label="Daily spending details"></div>
+    </section>
+
+    <section id="transactions" class="panel transactions-panel" aria-labelledby="transactions-title">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">YOUR RECORDS</p>
+          <h2 id="transactions-title">Transactions</h2>
+        </div>
+        <button class="button button-secondary" id="export-button" type="button">Export JSON</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="search-input">Search with regex</label>
+          <input id="search-input" type="search" placeholder="Try coffee, Food or \\d+" autocomplete="off">
+        </div>
+
+        <div class="toolbar-field">
+          <label for="category-filter">Category</label>
+          <select id="category-filter">
+            <option value="">All categories</option>
+            <option value="Food">Food</option>
+            <option value="Books">Books</option>
+            <option value="Transport">Transport</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Fees">Fees</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="toolbar-field">
+          <label for="sort-select">Sort by</label>
+          <select id="sort-select">
+            <option value="date-desc">Newest first</option>
+            <option value="date-asc">Oldest first</option>
+            <option value="description-asc">Description A–Z</option>
+            <option value="description-desc">Description Z–A</option>
+            <option value="amount-desc">Highest amount</option>
+            <option value="amount-asc">Lowest amount</option>
+          </select>
+        </div>
+
+        <label class="checkbox-label" for="case-sensitive">
+          <input id="case-sensitive" type="checkbox">
+          Match case
+        </label>
+      </div>
+
+      <p id="search-error" class="field-error" role="status"></p>
+      <p id="transaction-feedback" class="sr-only" role="status" aria-live="polite"></p>
+
+      <div class="table-container">
+        <table>
+          <caption class="sr-only">Your recorded expenses</caption>
+          <thead>
+            <tr>
+              <th scope="col">Description</th>
+              <th scope="col">Category</th>
+              <th scope="col">Date</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="transaction-list">
+            <tr>
+              <td colspan="5" class="empty-state">No transactions yet. Add your first expense to get started.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="transaction-form-section" class="panel form-panel" aria-labelledby="form-title">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">NEW RECORD</p>
+          <h2 id="form-title">Add a transaction</h2>
+        </div>
+      </div>
+
+      <form id="transaction-form" novalidate>
+        <input type="hidden" id="transaction-id">
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="description">Description</label>
+            <input id="description" name="description" type="text" maxlength="100" placeholder="e.g. Lunch at cafeteria" required aria-describedby="description-error">
+            <p class="field-error" id="description-error"></p>
+          </div>
+
+          <div class="form-field">
+            <label for="amount">Amount</label>
+            <input id="amount" name="amount" type="text" inputmode="decimal" placeholder="e.g. 4500.00" required aria-describedby="amount-error">
+            <p class="field-error" id="amount-error"></p>
+          </div>
+
+          <div class="form-field">
+            <label for="category">Category</label>
+            <select id="category" name="category" required aria-describedby="category-error">
+              <option value="">Choose a category</option>
+              <option value="Food">Food</option>
+              <option value="Books">Books</option>
+              <option value="Transport">Transport</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Fees">Fees</option>
+              <option value="Other">Other</option>
+            </select>
+            <p class="field-error" id="category-error"></p>
+          </div>
+
+          <div class="form-field">
+            <label for="date">Date</label>
+            <input id="date" name="date" type="date" required aria-describedby="date-error">
+            <p class="field-error" id="date-error"></p>
+          </div>
+        </div>
+
+        <p id="form-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+
+        <div class="form-actions">
+          <button class="button button-primary" type="submit" id="save-transaction-button">Save transaction</button>
+          <button class="button button-secondary" type="reset" id="reset-form-button">Clear form</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="about" class="panel info-panel" aria-labelledby="about-title">
+      <p class="eyebrow">THE IDEA</p>
+      <h2 id="about-title">A little more clarity with money.</h2>
+      <p>Pennywise is a student project designed to make everyday spending easier to understand. Record your expenses, spot patterns and keep your budget in view.</p>
+      <div class="contact-links">
+        <a href="https://github.com/fabriceniyonkuruishimwe" target="_blank" rel="noopener noreferrer">GitHub profile</a>
+        <a id="contact-email" href="mailto:your-email@example.com">Contact by email</a>
+      </div>
+    </section>
+
+    <section id="settings" class="panel settings-panel" aria-labelledby="settings-title">
+      <p class="eyebrow">MAKE IT YOURS</p>
+      <h2 id="settings-title">Settings</h2>
+
+      <form id="settings-form">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="budget-cap">Monthly budget cap</label>
+            <input id="budget-cap" type="number" min="0" step="0.01" value="120000" required>
+          </div>
+
+          <div class="form-field">
+            <label for="currency-select">Display currency</label>
+            <select id="currency-select">
+              <option value="RWF">RWF</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="usd-rate">RWF per USD</label>
+            <input id="usd-rate" type="number" min="0.000001" step="any" value="1400" required>
+          </div>
+
+          <div class="form-field">
+            <label for="eur-rate">RWF per EUR</label>
+            <input id="eur-rate" type="number" min="0.000001" step="any" value="1600" required>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="button button-primary" type="submit">Save settings</button>
+        </div>
+      </form>
+
+      <div class="data-actions">
+        <div>
+          <h3>Back up your data</h3>
+          <p class="muted-text">Export your transactions or restore them from a JSON file.</p>
+        </div>
+        <div class="form-actions">
+          <button class="button button-secondary" id="import-button" type="button">Import JSON</button>
+          <input id="import-file" type="file" accept=".json,application/json" hidden>
+        </div>
+      </div>
+
+      <p id="settings-feedback" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Pennywise · Built for smarter student spending.</p>
+    <p>Personal finance, made a little simpler.</p>
+  </footer>
+</body>
+</html>
