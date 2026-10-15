@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pennywise | Validation Tests</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <script type="module">
+    import {
+      validateDescription,
+      validateAmount,
+      validateDate,
+      validateCategory,
+      findDuplicateWords,
+      compileRegex
+    } from "./scripts/validators.js";
+
+    const tests = [
+      {
+        name: "Accepts a normal description",
+        run: () => validateDescription("Lunch at cafeteria") === ""
+      },
+      {
+        name: "Rejects leading spaces",
+        run: () => validateDescription(" Lunch") !== ""
+      },
+      {
+        name: "Rejects trailing spaces",
+        run: () => validateDescription("Lunch ") !== ""
+      },
+      {
+        name: "Accepts an amount with two decimals",
+        run: () => validateAmount("12.50") === ""
+      },
+      {
+        name: "Rejects negative amounts",
+        run: () => validateAmount("-12") !== ""
+      },
+      {
+        name: "Rejects amounts with too many decimals",
+        run: () => validateAmount("12.555") !== ""
+      },
+      {
+        name: "Accepts a valid date",
+        run: () => validateDate("2026-10-12") === ""
+      },
+      {
+        name: "Rejects February 31",
+        run: () => validateDate("2026-02-31") !== ""
+      },
+      {
+        name: "Rejects an invalid month",
+        run: () => validateDate("2026-13-01") !== ""
+      },
+      {
+        name: "Accepts a category with a hyphen",
+        run: () => validateCategory("Personal-Care") === ""
+      },
+      {
+        name: "Rejects digits in categories",
+        run: () => validateCategory("Food123") !== ""
+      },
+      {
+        name: "Detects repeated words",
+        run: () => findDuplicateWords("coffee coffee") === true
+      },
+      {
+        name: "Accepts a description without repeated words",
+        run: () => findDuplicateWords("coffee with friends") === false
+      },
+      {
+        name: "Handles invalid regular expressions",
+        run: () => compileRegex("[", false).error !== ""
+      },
+      {
+        name: "Compiles a valid regular expression",
+        run: () => compileRegex("coffee", false).regex instanceof RegExp
+      }
+    ];
+
+    const results = document.querySelector("#test-results");
+    const summary = document.querySelector("#test-summary");
+    let passed = 0;
+
+    for (const test of tests) {
+      const item = document.createElement("li");
+
+      try {
+        const success = test.run();
+
+        if (success) {
+          passed += 1;
+          item.textContent = `PASS: ${test.name}`;
+          item.className = "test-pass";
+        } else {
+          item.textContent = `FAIL: ${test.name}`;
+          item.className = "test-fail";
+        }
+      } catch {
+        item.textContent = `ERROR: ${test.name}`;
+        item.className = "test-fail";
+      }
+
+      results.append(item);
+    }
+
+    summary.textContent = `${passed} of ${tests.length} tests passed.`;
+    summary.className = passed === tests.length ? "test-pass" : "test-fail";
+  </script>
+  <style>
+    .test-page {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 32px 5%;
+    }
+
+    .test-list {
+      display: grid;
+      gap: 10px;
+      padding-left: 22px;
+    }
+
+    .test-pass {
+      color: var(--teal);
+    }
+
+    .test-fail {
+      color: var(--danger);
+    }
+
+    .test-list li {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to test results</a>
+
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <span class="brand-icon" aria-hidden="true">P</span>
+      <span>
+        <strong>Pennywise</strong>
+        <small>Validation tests</small>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="Test navigation">
+      <a href="index.html">Back to dashboard</a>
+    </nav>
+  </header>
+
+  <main id="main-content" class="test-page">
+    <p class="eyebrow">MILESTONE 3</p>
+    <h1>Validation test results</h1>
+    <p class="section-description">These tests check the transaction validation rules and regular expression handling.</p>
+    <section class="panel" aria-labelledby="summary-title">
+      <h2 id="summary-title">Summary</h2>
+      <p id="test-summary" role="status" aria-live="polite">Running tests...</p>
+    </section>
+    <section class="panel" aria-labelledby="results-title">
+      <h2 id="results-title">Individual tests</h2>
+      <ol id="test-results" class="test-list"></ol>
+    </section>
+  </main>
+</body>
+</html>

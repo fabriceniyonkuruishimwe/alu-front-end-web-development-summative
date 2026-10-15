@@ -1,0 +1,82 @@
+[
+  {
+    "id": "seed-001",
+    "description": "Weekly groceries",
+    "amount": 18500,
+    "category": "Food",
+    "date": "2026-10-12",
+    "createdAt": "2026-10-12T08:00:00.000Z"
+  },
+  {
+    "id": "seed-002",
+    "description": "Bus fare",
+    "amount": 2500,
+    "category": "Transport",
+    "date": "2026-10-11",
+    "createdAt": "2026-10-11T09:00:00.000Z"
+  },
+  {
+    "id": "seed-003",
+    "description": "Lunch",
+    "amount": 4500,
+    "category": "Food",
+    "date": "2026-10-10",
+    "createdAt": "2026-10-10T12:00:00.000Z"
+  },
+  {
+    "id": "seed-004",
+    "description": "Internet bundle",
+    "amount": 3000,
+    "category": "Utilities",
+    "date": "2026-10-09",
+    "createdAt": "2026-10-09T10:00:00.000Z"
+  },
+  {
+    "id": "seed-005",
+    "description": "Notebook and pens",
+    "amount": 6500,
+    "category": "Education",
+    "date": "2026-10-08",
+    "createdAt": "2026-10-08T11:00:00.000Z"
+  },
+  {
+    "id": "seed-006",
+    "description": "Movie ticket",
+    "amount": 5000,
+    "category": "Entertainment",
+    "date": "2026-10-07",
+    "createdAt": "2026-10-07T18:00:00.000Z"
+  },
+  {
+    "id": "seed-007",
+    "description": "Taxi ride",
+    "amount": 7000,
+    "category": "Transport",
+    "date": "2026-10-06",
+    "createdAt": "2026-10-06T15:00:00.000Z"
+  },
+  {
+    "id": "seed-008",
+    "description": "Coffee",
+    "amount": 2000,
+    "category": "Food",
+    "date": "2026-10-05",
+    "createdAt": "2026-10-05T08:30:00.000Z"
+  },
+  {
+    "id": "seed-009",
+    "description": "Haircut",
+    "amount": 8000,
+    "category": "Personal Care",
+    "date": "2026-10-04",
+    "createdAt": "2026-10-04T14:00:00.000Z"
+  },
+  {
+    "id": "seed-010",
+    "description": "Electricity",
+    "amount": 12000,
+    "category": "Utilities",
+    "date": "2026-10-03",
+    "createdAt": "2026-10-03T16:00:00.000Z"
+  }
+]
